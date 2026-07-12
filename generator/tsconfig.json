@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "moduleResolution": "node10",
+    "esModuleInterop": true,
+    "strict": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "types": ["node"],
+    "ignoreDeprecations": "5.0"
+  },
+  "include": ["src/**/*"]
+}

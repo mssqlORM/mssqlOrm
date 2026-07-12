@@ -1,0 +1,35 @@
+{
+  "name": "mssql-orm",
+  "version": "1.0.0",
+  "description": "The lightweight ORM for SQL Server with support for TypeScript, Python, and .NET (C#).",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "npx tsx generator/src/index.ts",
+    "db:push": "npx tsx push.ts",
+    "db:pull": "npx tsx pull.ts",
+    "db:seed": "npx tsx seed.ts",
+    "db:cleanup": "npx tsx cleanup.ts",
+    "db:migrate": "npx tsx migrate.ts",
+    "db:migrate:diff": "npx tsx migrate.ts diff",
+    "db:migrate:generate": "npx tsx migrate.ts generate",
+    "db:migrate:status": "npx tsx migrate.ts status",
+    "release:cli": "npx tsx scripts/release-cli.ts",
+    "release": "node scripts/release.js",
+    "test": "node test/smoke.test.js",
+    "test:unit": "node test/unit.test.js",
+    "test:generator": "node test/generator.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "mssql": "^12.5.5"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/mssql": "^9.1.8",
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.1",
+    "typescript": "^6.0.3"
+  }
+}

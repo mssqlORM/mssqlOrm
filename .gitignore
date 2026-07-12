@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+
+# Env files
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
+package-lock.json
