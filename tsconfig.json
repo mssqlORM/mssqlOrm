@@ -4,9 +4,9 @@
     "outDir": "./dist",
     "rootDir": ".",
     "paths": {
-      "@mssql/client": ["../mssqlClient/typescript"],
-      "@mssql/client/*": ["../mssqlClient/typescript/*"],
-      "@mssql/lib/*": ["../lib/*"]
+      "@an5/client": ["../an5Client/typescript"],
+      "@an5/client/*": ["../an5Client/typescript/*"],
+      "@an5/lib/*": ["../lib/*"]
     }
   },
   "include": ["./**/*.ts"],

@@ -1,18 +1,18 @@
 import sql from "mssql";
-import { MssqlAdapter } from "mssql-adapters";
+import { An5Adapter } from "an5-adapters";
 import { randomUUID } from "crypto";
-import { logger } from "@mssql/lib/logger";
-import { Mssql } from "mssql-client/typescript";
+import { logger } from "@an5/lib/logger";
+import { An5 } from "an5-client/typescript";
 
-import { modelToTable, relationMap, RelationDef, modelFields } from "mssql-client/typescript/mssqlMetadata";
+import { modelToTable, relationMap, RelationDef, modelFields } from "an5-client/typescript/an5Metadata";
 
 type ExecutorFn = (queryText: string, params?: Record<string, any>) => Promise<any[]>;
 
-let adapter: MssqlAdapter | null = null;
+let adapter: An5Adapter | null = null;
 
-async function getAdapter(): Promise<MssqlAdapter> {
+async function getAdapter(): Promise<An5Adapter> {
   if (!adapter) {
-    adapter = new MssqlAdapter({ connectionString: process.env.DATABASE_URL! });
+    adapter = new An5Adapter({ connectionString: process.env.DATABASE_URL! });
     await adapter.$connect();
   }
   return adapter;
@@ -325,7 +325,7 @@ class TableClient<T = any> {
     private modelName: string,
     private tableName: string,
     private executor: ExecutorFn,
-    private orm: MssqlORM
+    private orm: An5ORM
   ) { }
 
   async findMany(args?: any): Promise<T[]> {
@@ -421,7 +421,7 @@ class TableClient<T = any> {
 
       const nestedOps = value as any;
 
-      // Handle deleteMany (mssqlOrm-style)
+      // Handle deleteMany (an5Orm-style)
       if (nestedOps.deleteMany) {
         const deleteWhere = Array.isArray(nestedOps.deleteMany) ? { OR: nestedOps.deleteMany } : nestedOps.deleteMany;
         // Scope deletion to parent
@@ -523,21 +523,21 @@ class TableClient<T = any> {
           errNumber === 2627 ||
           errNumber === 2601
         ) {
-          throw new Mssql.MssqlClientKnownRequestError("Unique constraint failed", {
+          throw new An5.An5ClientKnownRequestError("Unique constraint failed", {
             code: "P2002",
             clientVersion: "mock",
           });
         }
 
         if (msg.includes('foreign key') || errNumber === 547) {
-          throw new Mssql.MssqlClientKnownRequestError("Foreign key constraint failed", {
+          throw new An5.An5ClientKnownRequestError("Foreign key constraint failed", {
             code: "P2003",
             clientVersion: "mock",
           });
         }
 
         if (msg.includes('not found') || errNumber === 404) {
-          throw new Mssql.MssqlClientKnownRequestError("Record not found", {
+          throw new An5.An5ClientKnownRequestError("Record not found", {
             code: "P2025",
             clientVersion: "mock",
           });
@@ -1226,8 +1226,8 @@ export interface MiddlewareParams {
 export type MiddlewareNext = (params: MiddlewareParams) => Promise<any>;
 export type Middleware = (params: MiddlewareParams, next: MiddlewareNext) => Promise<any>;
 
-// Proxied MSSQL ORM client class
-export class MssqlORM {
+// Proxied AN5 ORM client class
+export class An5ORM {
   [key: string]: any;
   private middlewares: Middleware[] = [];
 
@@ -1439,7 +1439,7 @@ export class MssqlORM {
       return recordset;
     };
 
-    const txClient = new MssqlORM(txExecutor);
+    const txClient = new An5ORM(txExecutor);
 
     try {
       const result = await fn(txClient);
@@ -1458,5 +1458,5 @@ export class MssqlORM {
   }
 }
 
-export const mssqlOrm = new MssqlORM();
-export default mssqlOrm;
+export const an5Orm = new An5ORM();
+export default an5Orm;

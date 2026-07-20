@@ -28,19 +28,19 @@ async function main() {
   let config: any = {};
   
   try {
-    const configPath = path.join(rootDir, 'mssqlOrm.config.js');
+    const configPath = path.join(rootDir, 'an5Orm.config.js');
     if (fs.existsSync(configPath)) {
       config = require(configPath);
     }
   } catch (err) {
-    console.warn('⚠️ Could not load mssqlOrm.config.js, using defaults.', err);
+    console.warn('⚠️ Could not load an5Orm.config.js, using defaults.', err);
   }
 
-  const schemaDir = path.resolve(rootDir, config.schemaDir || 'mssqlSchema');
-  const outputTypesDir = path.resolve(rootDir, config.outputs?.typescript?.outputDir || 'mssqlClient/typescript');
-  const outputMetadataPath = path.resolve(rootDir, config.outputs?.typescript?.metadataFile || 'mssqlClient/typescript/mssqlMetadata.ts');
-  const outputPythonMetadataPath = path.resolve(rootDir, config.outputs?.python?.metadataFile || 'mssqlClient/python/mssql_metadata.py');
-  const outputDotnetDir = path.resolve(rootDir, config.outputs?.dotnet?.outputDir || 'mssqlClient/dotnet');
+  const schemaDir = path.resolve(rootDir, config.schemaDir || 'an5Schema');
+  const outputTypesDir = path.resolve(rootDir, config.outputs?.typescript?.outputDir || 'an5Client/typescript');
+  const outputMetadataPath = path.resolve(rootDir, config.outputs?.typescript?.metadataFile || 'an5Client/typescript/an5Metadata.ts');
+  const outputPythonMetadataPath = path.resolve(rootDir, config.outputs?.python?.metadataFile || 'an5Client/python/an5_metadata.py');
+  const outputDotnetDir = path.resolve(rootDir, config.outputs?.dotnet?.outputDir || 'an5Client/dotnet');
 
   console.log('🚀 Starting ORM generation...');
 

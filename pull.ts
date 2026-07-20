@@ -1,12 +1,12 @@
 import "dotenv/config";
 import fs from "fs";
 import path from "path";
-import { MssqlAdapter } from "mssql-adapters";
+import { An5Adapter } from "an5-adapters";
 
 const rootDir = path.join(__dirname, "../");
 let config: any = {};
 try {
-  const configPath = path.join(rootDir, "mssqlOrm.config.js");
+  const configPath = path.join(rootDir, "an5Orm.config.js");
   if (fs.existsSync(configPath)) {
     config = require(configPath);
   }
@@ -14,12 +14,12 @@ try {
   console.warn("⚠️ Could not load config file in pull.ts, using defaults.");
 }
 
-const schemaDir = path.resolve(rootDir, config.schemaDir || "mssqlSchema");
+const schemaDir = path.resolve(rootDir, config.schemaDir || "an5Schema");
 
-let _adapter: MssqlAdapter | null = null;
-async function getDb(): Promise<MssqlAdapter> {
+let _adapter: An5Adapter | null = null;
+async function getDb(): Promise<An5Adapter> {
   if (!_adapter) {
-    _adapter = new MssqlAdapter({ connectionString: process.env.DATABASE_URL! });
+    _adapter = new An5Adapter({ connectionString: process.env.DATABASE_URL! });
     await _adapter.$connect();
   }
   return _adapter;
@@ -46,7 +46,7 @@ async function pull() {
   const tableToFileMap: Record<string, string> = {}; // tableName -> fileName
 
   if (fs.existsSync(schemaDir)) {
-    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".mssql"));
+    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".an5"));
     for (const file of files) {
       const fullPath = path.join(schemaDir, file);
       const text = fs.readFileSync(fullPath, "utf8");
@@ -76,8 +76,8 @@ async function pull() {
     fs.mkdirSync(schemaDir, { recursive: true });
   }
 
-  // Ensure default core.mssql exists in fileContents
-  const defaultFile = "core.mssql";
+  // Ensure default core.an5 exists in fileContents
+  const defaultFile = "core.an5";
   if (!fileContents[defaultFile]) {
     fileContents[defaultFile] = "";
   }
@@ -333,13 +333,13 @@ async function pull() {
   // Index schema into vector store for RAG
   console.log("\n📚 Indexing schema into vector store for RAG...");
   try {
-    const { indexSchema, indexQuerySamples } = require(path.join(rootDir, "mssqlAgent", "dist", "rag", "indexer.js"));
+    const { indexSchema, indexQuerySamples } = require(path.join(rootDir, "an5Agent", "dist", "rag", "indexer.js"));
     await indexSchema(schemaDir);
     await indexQuerySamples();
     console.log("✅ Schema indexed for RAG.");
   } catch (err: any) {
     console.warn(`⚠️ RAG indexing skipped: ${err.message || err}`);
-    console.warn(`   Run 'npm --prefix mssqlAgent run rag:index' manually to build vector store.`);
+    console.warn(`   Run 'npm --prefix an5Agent run rag:index' manually to build vector store.`);
   }
 
   console.log("✅ Database schema pulling completed successfully.");

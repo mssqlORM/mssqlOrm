@@ -3,7 +3,7 @@ import path from 'path';
 import { Model, Field, Relation } from './types';
 
 // SQL Server type → TypeScript type mapping
-const MSSQL_TO_TS: Record<string, string> = {
+const AN5_TO_TS: Record<string, string> = {
   // String types
   'NVARCHAR': 'string',
   'VARCHAR': 'string',
@@ -56,7 +56,7 @@ function parseSqlType(raw: string): { base: string; params: string } {
 // Map SQL Server type to TypeScript type
 export function sqlTypeToTs(sqlType: string): string {
   const { base } = parseSqlType(sqlType);
-  return MSSQL_TO_TS[base] || 'any';
+  return AN5_TO_TS[base] || 'any';
 }
 
 export class SchemaParser {
@@ -104,7 +104,7 @@ export class SchemaParser {
 
   private loadSchema() {
     if (fs.existsSync(this.schemaDir)) {
-      const files = fs.readdirSync(this.schemaDir).filter(f => f.endsWith('.mssql'));
+      const files = fs.readdirSync(this.schemaDir).filter(f => f.endsWith('.an5'));
       for (const file of files) {
         this.schemaText += fs.readFileSync(path.join(this.schemaDir, file), 'utf8') + '\n';
       }
@@ -156,7 +156,7 @@ export class SchemaParser {
     let isRelation = false;
 
     // Check if it's a known SQL Server type
-    if (MSSQL_TO_TS[sqlBase]) {
+    if (AN5_TO_TS[sqlBase]) {
       tsType = sqlTypeToTs(cleanType);
     } else if (cleanType[0] === cleanType[0].toUpperCase() && !cleanType.includes('(')) {
       // Uppercase without parens = likely a relation to another model

@@ -19,8 +19,8 @@ export class CodeGenerator {
 
   private generateBaseTs() {
     const baseTs = `
-export namespace Mssql {
-  export class MssqlClientKnownRequestError extends Error {
+export namespace An5 {
+  export class An5ClientKnownRequestError extends Error {
     code!: string;
     meta?: any;
     constructor(message: string, { code, clientVersion }: { code: string; clientVersion: string }) {
@@ -62,7 +62,7 @@ export interface TableClient<T, WhereInput = any, Select = any, Include = any, C
   }
 
   private generateModelFile(model: Model) {
-    let content = `import { Mssql, TableClient } from './base';\n`;
+    let content = `import { An5, TableClient } from './base';\n`;
     const relModels = [...new Set(model.relations.map(r => r.type))];
     for (const relModel of relModels) {
       if (relModel !== model.name) {
@@ -119,7 +119,7 @@ export interface TableClient<T, WhereInput = any, Select = any, Include = any, C
     content += `export type ${model.name}Include = { ${includeRels.join('; ')}${includeRels.length > 0 ? ';' : ''} };\n`;
 
     content += `export type ${model.name}CreateInput = { ${model.fields.map(f => `${f.name}${f.isOptional || f.hasDefault ? '?' : ''}: ${f.type}${f.isOptional ? ' | null' : ''}`).join('; ')}; ${model.relations.map(r => `${r.name}?: { create?: ${r.type}CreateInput | ${r.type}CreateInput[]; connect?: ${r.type}WhereInput | ${r.type}WhereInput[]; }`).join('; ')} };\n`;
-    content += `export type ${model.name}UpdateInput = { ${model.fields.filter(f => !f.isId).map(f => `${f.name}?: ${f.type === 'number' ? 'number | Mssql.IntFieldUpdateOperationsInput' : f.type}${f.isOptional ? ' | null' : ''}`).join('; ')}; ${model.relations.map(r => `${r.name}?: { create?: ${r.type}CreateInput | ${r.type}CreateInput[]; connect?: ${r.type}WhereInput | ${r.type}WhereInput[]; set?: ${r.type}WhereInput | ${r.type}WhereInput[]; disconnect?: ${r.type}WhereInput | ${r.type}WhereInput[]; delete?: ${r.type}WhereInput | ${r.type}WhereInput[]; update?: { where: ${r.type}WhereInput; data: ${r.type}UpdateInput; } | { where: ${r.type}WhereInput; data: ${r.type}UpdateInput; }[]; upsert?: { where: ${r.type}WhereInput; create: ${r.type}CreateInput; update: ${r.type}UpdateInput; } | { where: ${r.type}WhereInput; create: ${r.type}CreateInput; update: ${r.type}UpdateInput; }[]; }`).join('; ')} };\n`;
+    content += `export type ${model.name}UpdateInput = { ${model.fields.filter(f => !f.isId).map(f => `${f.name}?: ${f.type === 'number' ? 'number | An5.IntFieldUpdateOperationsInput' : f.type}${f.isOptional ? ' | null' : ''}`).join('; ')}; ${model.relations.map(r => `${r.name}?: { create?: ${r.type}CreateInput | ${r.type}CreateInput[]; connect?: ${r.type}WhereInput | ${r.type}WhereInput[]; set?: ${r.type}WhereInput | ${r.type}WhereInput[]; disconnect?: ${r.type}WhereInput | ${r.type}WhereInput[]; delete?: ${r.type}WhereInput | ${r.type}WhereInput[]; update?: { where: ${r.type}WhereInput; data: ${r.type}UpdateInput; } | { where: ${r.type}WhereInput; data: ${r.type}UpdateInput; }[]; upsert?: { where: ${r.type}WhereInput; create: ${r.type}CreateInput; update: ${r.type}UpdateInput; } | { where: ${r.type}WhereInput; create: ${r.type}CreateInput; update: ${r.type}UpdateInput; }[]; }`).join('; ')} };\n`;
 
     content += `export type ${model.name}FindManyArgs = { where?: ${model.name}WhereInput; orderBy?: any; take?: number; skip?: number; include?: ${model.name}Include; select?: ${model.name}Select; };\n`;
     content += `export type ${model.name}FindFirstArgs = { where?: ${model.name}WhereInput; orderBy?: any; include?: ${model.name}Include; select?: ${model.name}Select; };\n`;
@@ -139,24 +139,24 @@ export interface TableClient<T, WhereInput = any, Select = any, Include = any, C
     for (const model of models) {
       content += `export * from './${model.name}';\n`;
     }
-    content += `\nimport { Mssql as BaseMssql } from './base';\n`;
+    content += `\nimport { An5 as BaseAn5 } from './base';\n`;
     for (const model of models) {
       content += `import * as ${model.name}Types from './${model.name}';\n`;
     }
 
-    content += `\nexport namespace Mssql {\n`;
-    content += `  export type SortOrder = BaseMssql.SortOrder;\n`;
-    content += `  export type StringFilter = BaseMssql.StringFilter;\n`;
-    content += `  export type StringNullableFilter = BaseMssql.StringNullableFilter;\n`;
-    content += `  export type NumberFilter = BaseMssql.NumberFilter;\n`;
-    content += `  export type NumberNullableFilter = BaseMssql.NumberNullableFilter;\n`;
-    content += `  export type BooleanFilter = BaseMssql.BooleanFilter;\n`;
-    content += `  export type BooleanNullableFilter = BaseMssql.BooleanNullableFilter;\n`;
-    content += `  export type DateTimeFilter = BaseMssql.DateTimeFilter;\n`;
-    content += `  export type DateTimeNullableFilter = BaseMssql.DateTimeNullableFilter;\n`;
-    content += `  export type IntFieldUpdateOperationsInput = BaseMssql.IntFieldUpdateOperationsInput;\n`;
-    content += `  export type FloatFieldUpdateOperationsInput = BaseMssql.FloatFieldUpdateOperationsInput;\n`;
-    content += `  export const MssqlClientKnownRequestError = BaseMssql.MssqlClientKnownRequestError;\n`;
+    content += `\nexport namespace An5 {\n`;
+    content += `  export type SortOrder = BaseAn5.SortOrder;\n`;
+    content += `  export type StringFilter = BaseAn5.StringFilter;\n`;
+    content += `  export type StringNullableFilter = BaseAn5.StringNullableFilter;\n`;
+    content += `  export type NumberFilter = BaseAn5.NumberFilter;\n`;
+    content += `  export type NumberNullableFilter = BaseAn5.NumberNullableFilter;\n`;
+    content += `  export type BooleanFilter = BaseAn5.BooleanFilter;\n`;
+    content += `  export type BooleanNullableFilter = BaseAn5.BooleanNullableFilter;\n`;
+    content += `  export type DateTimeFilter = BaseAn5.DateTimeFilter;\n`;
+    content += `  export type DateTimeNullableFilter = BaseAn5.DateTimeNullableFilter;\n`;
+    content += `  export type IntFieldUpdateOperationsInput = BaseAn5.IntFieldUpdateOperationsInput;\n`;
+    content += `  export type FloatFieldUpdateOperationsInput = BaseAn5.FloatFieldUpdateOperationsInput;\n`;
+    content += `  export const An5ClientKnownRequestError = BaseAn5.An5ClientKnownRequestError;\n`;
 
     for (const model of models) {
       content += `  export type ${model.name} = ${model.name}Types.${model.name};\n`;
@@ -168,7 +168,7 @@ export interface TableClient<T, WhereInput = any, Select = any, Include = any, C
     }
     content += `}\n`;
 
-    content += `\nexport class MssqlClient {\n  $connect(): Promise<void> { return Promise.resolve(); }\n  $disconnect(): Promise<void> { return Promise.resolve(); }\n  $transaction<R>(fn: (tx: MssqlClient) => Promise<R>, options?: { timeout?: number }): Promise<R>;\n  $transaction<R>(list: Promise<R>[]): Promise<R[]>;\n  $transaction(fn: any, options?: any): Promise<any> { return typeof fn === 'function' ? fn(this) : Promise.all(fn); }\n  $queryRaw<T = any>(queryParts: TemplateStringsArray | string, ...values: any[]): Promise<T> { return Promise.resolve([] as any); }\n  $queryRawUnsafe<R = any>(query: string, ...values: any[]): Promise<R> { return Promise.resolve([] as any); }\n  $executeRaw<T = any>(queryParts: TemplateStringsArray | string, ...values: any[]): Promise<any> { return Promise.resolve(0 as any); }\n  $executeRawUnsafe(query: string, ...values: any[]): Promise<number> { return Promise.resolve(0); }\n`;
+    content += `\nexport class An5Client {\n  $connect(): Promise<void> { return Promise.resolve(); }\n  $disconnect(): Promise<void> { return Promise.resolve(); }\n  $transaction<R>(fn: (tx: An5Client) => Promise<R>, options?: { timeout?: number }): Promise<R>;\n  $transaction<R>(list: Promise<R>[]): Promise<R[]>;\n  $transaction(fn: any, options?: any): Promise<any> { return typeof fn === 'function' ? fn(this) : Promise.all(fn); }\n  $queryRaw<T = any>(queryParts: TemplateStringsArray | string, ...values: any[]): Promise<T> { return Promise.resolve([] as any); }\n  $queryRawUnsafe<R = any>(query: string, ...values: any[]): Promise<R> { return Promise.resolve([] as any); }\n  $executeRaw<T = any>(queryParts: TemplateStringsArray | string, ...values: any[]): Promise<any> { return Promise.resolve(0 as any); }\n  $executeRawUnsafe(query: string, ...values: any[]): Promise<number> { return Promise.resolve(0); }\n`;
 
     const addedProps = new Set<string>();
     for (const model of models) {
@@ -200,10 +200,10 @@ export interface TableClient<T, WhereInput = any, Select = any, Include = any, C
 
   private getFieldFilterType(field: Field): string {
     const normalizedType = this.normalizeType(field.type);
-    if (normalizedType === 'string') return field.isOptional ? 'Mssql.StringNullableFilter' : 'Mssql.StringFilter';
-    if (normalizedType === 'number') return field.isOptional ? 'Mssql.NumberNullableFilter' : 'Mssql.NumberFilter';
-    if (normalizedType === 'boolean') return field.isOptional ? 'Mssql.BooleanNullableFilter' : 'Mssql.BooleanFilter';
-    if (normalizedType === 'Date') return field.isOptional ? 'Mssql.DateTimeNullableFilter' : 'Mssql.DateTimeFilter';
+    if (normalizedType === 'string') return field.isOptional ? 'An5.StringNullableFilter' : 'An5.StringFilter';
+    if (normalizedType === 'number') return field.isOptional ? 'An5.NumberNullableFilter' : 'An5.NumberFilter';
+    if (normalizedType === 'boolean') return field.isOptional ? 'An5.BooleanNullableFilter' : 'An5.BooleanFilter';
+    if (normalizedType === 'Date') return field.isOptional ? 'An5.DateTimeNullableFilter' : 'An5.DateTimeFilter';
     return 'any';
   }
 

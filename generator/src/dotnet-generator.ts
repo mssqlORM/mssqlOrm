@@ -26,15 +26,15 @@ export class DotnetGenerator {
     const content = `// This file is auto-generated. Do not edit directly.
 using System;
 
-namespace MssqlOrm
+namespace An5Orm
 {
-    public static class MssqlConfig
+    public static class An5Config
     {
         public static string ConnectionString { get; set; } = Environment.GetEnvironmentVariable("DATABASE_URL") ?? "Server=localhost;Database=master;Trusted_Connection=True;TrustServerCertificate=True;";
     }
 }
 `;
-    fs.writeFileSync(path.join(this.outputDir, 'MssqlConfig.cs'), content);
+    fs.writeFileSync(path.join(this.outputDir, 'An5Config.cs'), content);
   }
 
   private mapType(fieldType: string, isOptional: boolean): string {
@@ -78,7 +78,7 @@ namespace MssqlOrm
 using System;
 using System.Collections.Generic;
 
-namespace MssqlOrm.Entities
+namespace An5Orm.Entities
 {
     public class ${model.name}
     {
@@ -116,11 +116,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using Microsoft.Data.SqlClient;
-using MssqlOrm.Entities;
+using An5Orm.Entities;
 
-namespace MssqlOrm
+namespace An5Orm
 {
-    public class MssqlDbContext
+    public class An5DbContext
     {
         public string ConnectionString { get; }
         
@@ -129,19 +129,19 @@ namespace MssqlOrm
         [ThreadStatic]
         private static SqlTransaction _tx;
 
-        public MssqlDbContext(string connectionString = null)
+        public An5DbContext(string connectionString = null)
         {
-            ConnectionString = connectionString ?? MssqlConfig.ConnectionString;
+            ConnectionString = connectionString ?? An5Config.ConnectionString;
         }
 
-        public MssqlTransaction BeginTransaction()
+        public An5Transaction BeginTransaction()
         {
             var conn = new SqlConnection(ConnectionString);
             conn.Open();
             var tx = conn.BeginTransaction();
             _txConn = conn;
             _tx = tx;
-            return new MssqlTransaction(conn, tx, () => {
+            return new An5Transaction(conn, tx, () => {
                 _txConn = null;
                 _tx = null;
             });
@@ -171,14 +171,14 @@ namespace MssqlOrm
 
     content += `    }
 
-    public class MssqlTransaction : IDisposable
+    public class An5Transaction : IDisposable
     {
         private readonly SqlConnection _conn;
         private readonly SqlTransaction _tx;
         private readonly Action _cleanup;
         private bool _completed;
 
-        public MssqlTransaction(SqlConnection conn, SqlTransaction tx, Action cleanup)
+        public An5Transaction(SqlConnection conn, SqlTransaction tx, Action cleanup)
         {
             _conn = conn;
             _tx = tx;
@@ -223,7 +223,7 @@ namespace MssqlOrm
         private SqlCommand CreateCommand(SqlConnection conn, string query)
         {
             var cmd = new SqlCommand(query, conn);
-            var activeTx = MssqlDbContext.GetActiveTransaction();
+            var activeTx = An5DbContext.GetActiveTransaction();
             if (activeTx != null)
             {
                 cmd.Transaction = activeTx;
@@ -240,7 +240,7 @@ namespace MssqlOrm
                 query += $" WHERE {whereClause}";
             }
 
-            var conn = MssqlDbContext.GetActiveConnection(ConnectionString, out bool isTx);
+            var conn = An5DbContext.GetActiveConnection(ConnectionString, out bool isTx);
             try
             {
                 using (var cmd = CreateCommand(conn, query))
@@ -290,7 +290,7 @@ namespace MssqlOrm
                 query += $" WHERE {whereClause}";
             }
 
-            var conn = MssqlDbContext.GetActiveConnection(ConnectionString, out bool isTx);
+            var conn = An5DbContext.GetActiveConnection(ConnectionString, out bool isTx);
             try
             {
                 using (var cmd = CreateCommand(conn, query))
@@ -356,7 +356,7 @@ namespace MssqlOrm
             }
 
             string query = $"INSERT INTO {TableName} ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)})";
-            var conn = MssqlDbContext.GetActiveConnection(ConnectionString, out bool isTx);
+            var conn = An5DbContext.GetActiveConnection(ConnectionString, out bool isTx);
             try
             {
                 using (var cmd = CreateCommand(conn, query))
@@ -404,7 +404,7 @@ namespace MssqlOrm
 
             sqlParams.Add(new SqlParameter("@id", idVal));
             string query = $"UPDATE {TableName} SET {string.Join(", ", sets)} WHERE Id = @id";
-            var conn = MssqlDbContext.GetActiveConnection(ConnectionString, out bool isTx);
+            var conn = An5DbContext.GetActiveConnection(ConnectionString, out bool isTx);
             try
             {
                 using (var cmd = CreateCommand(conn, query))
@@ -423,7 +423,7 @@ namespace MssqlOrm
         public bool Delete(object id)
         {
             string query = $"DELETE FROM {TableName} WHERE Id = @id";
-            var conn = MssqlDbContext.GetActiveConnection(ConnectionString, out bool isTx);
+            var conn = An5DbContext.GetActiveConnection(ConnectionString, out bool isTx);
             try
             {
                 using (var cmd = CreateCommand(conn, query))
@@ -534,7 +534,7 @@ namespace MssqlOrm
 }
 `;
 
-    fs.writeFileSync(path.join(this.outputDir, 'MssqlDbContext.cs'), content);
+    fs.writeFileSync(path.join(this.outputDir, 'An5DbContext.cs'), content);
   }
 
   private capitalize(str: string): string {

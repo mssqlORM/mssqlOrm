@@ -1,5 +1,5 @@
 /**
- * Release script for mssqlOrm workspace
+ * Release script for an5Orm workspace
  * Publishes all packages to NPM in the correct order.
  *
  * Usage:
@@ -15,10 +15,10 @@ const dryRun = args.includes('--dry-run');
 const bumpType = args.find(a => ['patch', 'minor', 'major'].includes(a)) || 'patch';
 
 const packages = [
-  { name: 'mssql-orm', path: path.join(__dirname, '..') },
-  { name: 'mssql-client', path: path.join(__dirname, '..', '..', 'mssqlClient') },
-  { name: 'mssql-adapters', path: path.join(__dirname, '..', '..', 'mssqlAdapters') },
-  { name: 'mssql-agent', path: path.join(__dirname, '..', '..', 'mssqlAgent') },
+  { name: 'an5-orm', path: path.join(__dirname, '..') },
+  { name: 'an5-client', path: path.join(__dirname, '..', '..', 'an5Client') },
+  { name: 'an5-adapters', path: path.join(__dirname, '..', '..', 'an5Adapters') },
+  { name: 'an5-agent', path: path.join(__dirname, '..', '..', 'an5Agent') },
 ];
 
 function run(cmd, cwd) {
@@ -41,7 +41,7 @@ function bumpVersion(version, type) {
   return parts.join('.');
 }
 
-console.log('\n=== mssqlOrm Release ===\n');
+console.log('\n=== an5Orm Release ===\n');
 console.log(`Bump type: ${bumpType}`);
 console.log(`Dry run: ${dryRun}\n`);
 

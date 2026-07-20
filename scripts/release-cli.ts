@@ -21,8 +21,8 @@ function run(cmd: string, allowFail = false): string {
 function inferComponent(file: string): string {
   const normalized = file.replace('\\', '/').toLowerCase();
   if (normalized.includes('/generator/')) return 'generator';
-  if (normalized.includes('/mssqlclient/')) return 'client';
-  if (normalized.includes('/mssqlschema/')) return 'schema';
+  if (normalized.includes('/an5client/')) return 'client';
+  if (normalized.includes('/an5schema/')) return 'schema';
   if (normalized.includes('/.github/')) return 'ci';
   if (normalized.includes('package.json') || normalized.includes('tsconfig')) return 'build';
   if (normalized.includes('.md')) return 'docs';

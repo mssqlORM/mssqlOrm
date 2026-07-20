@@ -1,5 +1,5 @@
 {
-  "name": "mssql-orm",
+  "name": "an5-orm",
   "version": "1.0.0",
   "description": "The lightweight ORM for SQL Server with support for TypeScript, Python, and .NET (C#).",
   "main": "dist/index.js",

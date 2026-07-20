@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { MssqlAdapter } from "mssql-adapters";
+import { An5Adapter } from "an5-adapters";
 import fs from "fs";
 import path from "path";
 
 const rootDir = path.join(__dirname, "../");
 let config: any = {};
 try {
-  const configPath = path.join(rootDir, "mssqlOrm.config.js");
+  const configPath = path.join(rootDir, "an5Orm.config.js");
   if (fs.existsSync(configPath)) {
     config = require(configPath);
   }
@@ -14,12 +14,12 @@ try {
   console.warn("⚠️ Could not load config file in cleanup.ts, using defaults.");
 }
 
-const schemaDir = path.resolve(rootDir, config.schemaDir || "mssqlSchema");
+const schemaDir = path.resolve(rootDir, config.schemaDir || "an5Schema");
 
-let _adapter: MssqlAdapter | null = null;
-async function getDb(): Promise<MssqlAdapter> {
+let _adapter: An5Adapter | null = null;
+async function getDb(): Promise<An5Adapter> {
   if (!_adapter) {
-    _adapter = new MssqlAdapter({ connectionString: process.env.DATABASE_URL! });
+    _adapter = new An5Adapter({ connectionString: process.env.DATABASE_URL! });
     await _adapter.$connect();
   }
   return _adapter;
@@ -30,12 +30,12 @@ async function cleanup() {
 
   let schemaText = "";
   if (fs.existsSync(schemaDir)) {
-    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".mssql"));
+    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".an5"));
     for (const file of files) {
       schemaText += fs.readFileSync(path.join(schemaDir, file), "utf8") + "\n";
     }
   } else {
-    const schemaPath = path.join(__dirname, "schema.mssql");
+    const schemaPath = path.join(__dirname, "schema.an5");
     if (fs.existsSync(schemaPath)) {
       schemaText = fs.readFileSync(schemaPath, "utf8");
     } else {
@@ -66,8 +66,8 @@ async function cleanup() {
     }
   }
 
-  // Also include the capitalization variations from mssqlMetadata if we can, 
-  // but schema.mssql is the source of truth.
+  // Also include the capitalization variations from an5Metadata if we can, 
+  // but schema.an5 is the source of truth.
   
   console.log("Valid tables from schema:", Array.from(validTables));
 

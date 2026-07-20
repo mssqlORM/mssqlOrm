@@ -1,5 +1,5 @@
 /**
- * mssqlOrm Generator Unit Tests
+ * an5Orm Generator Unit Tests
  * Tests for schema parser and code generation.
  * Run: node test/generator.test.js
  */
@@ -46,8 +46,8 @@ console.log('\n=== Generator Unit Tests ===\n');
 
 console.log('Schema Files:');
 
-test('test1.mssql exists and is valid', () => {
-  const schemaPath = path.join(__dirname, '..', '..', 'mssqlSchema', 'test1.mssql');
+test('test1.an5 exists and is valid', () => {
+  const schemaPath = path.join(__dirname, '..', '..', 'an5Schema', 'test1.an5');
   assertExists(schemaPath);
   const content = fs.readFileSync(schemaPath, 'utf8');
   assertIncludes(content, 'model User');
@@ -57,8 +57,8 @@ test('test1.mssql exists and is valid', () => {
   assertIncludes(content, 'DATETIME2');
 });
 
-test('test2.mssql exists and has Order model', () => {
-  const schemaPath = path.join(__dirname, '..', '..', 'mssqlSchema', 'test2.mssql');
+test('test2.an5 exists and has Order model', () => {
+  const schemaPath = path.join(__dirname, '..', '..', 'an5Schema', 'test2.an5');
   assertExists(schemaPath);
   const content = fs.readFileSync(schemaPath, 'utf8');
   assertIncludes(content, 'model Order');
@@ -66,14 +66,14 @@ test('test2.mssql exists and has Order model', () => {
 });
 
 test('schema files parse model headers correctly', () => {
-  const schemaPath = path.join(__dirname, '..', '..', 'mssqlSchema', 'test1.mssql');
+  const schemaPath = path.join(__dirname, '..', '..', 'an5Schema', 'test1.an5');
   const content = fs.readFileSync(schemaPath, 'utf8');
   const modelMatch = content.match(/model\s+(\w+)\s*\{/);
   assertEq(modelMatch[1], 'User');
 });
 
 test('schema files use SQL Server types directly', () => {
-  const schemaPath = path.join(__dirname, '..', '..', 'mssqlSchema', 'test1.mssql');
+  const schemaPath = path.join(__dirname, '..', '..', 'an5Schema', 'test1.an5');
   const content = fs.readFileSync(schemaPath, 'utf8');
   assertIncludes(content, 'NVARCHAR(');
   assertIncludes(content, 'DATETIME2');
@@ -132,21 +132,21 @@ test('generator index.ts has main function', () => {
 
 console.log('\nGenerated Output:');
 
-test('mssqlClient/typescript/index.ts exists', () => {
-  const indexPath = path.join(__dirname, '..', '..', 'mssqlClient', 'typescript', 'index.ts');
+test('an5Client/typescript/index.ts exists', () => {
+  const indexPath = path.join(__dirname, '..', '..', 'an5Client', 'typescript', 'index.ts');
   assertExists(indexPath);
 });
 
-test('mssqlClient/typescript/base.ts exists with Mssql namespace', () => {
-  const basePath = path.join(__dirname, '..', '..', 'mssqlClient', 'typescript', 'base.ts');
+test('an5Client/typescript/base.ts exists with An5 namespace', () => {
+  const basePath = path.join(__dirname, '..', '..', 'an5Client', 'typescript', 'base.ts');
   assertExists(basePath);
   const content = fs.readFileSync(basePath, 'utf8');
-  assertIncludes(content, 'namespace Mssql');
-  assertIncludes(content, 'MssqlClientKnownRequestError');
+  assertIncludes(content, 'namespace An5');
+  assertIncludes(content, 'An5ClientKnownRequestError');
 });
 
-test('mssqlClient/typescript/mssqlMetadata.ts exists', () => {
-  const metaPath = path.join(__dirname, '..', '..', 'mssqlClient', 'typescript', 'mssqlMetadata.ts');
+test('an5Client/typescript/an5Metadata.ts exists', () => {
+  const metaPath = path.join(__dirname, '..', '..', 'an5Client', 'typescript', 'an5Metadata.ts');
   assertExists(metaPath);
   const content = fs.readFileSync(metaPath, 'utf8');
   assertIncludes(content, 'modelToTable');
@@ -154,30 +154,30 @@ test('mssqlClient/typescript/mssqlMetadata.ts exists', () => {
   assertIncludes(content, 'modelFields');
 });
 
-test('mssqlClient/python/mssql_metadata.py exists', () => {
-  const pyPath = path.join(__dirname, '..', '..', 'mssqlClient', 'python', 'mssql_metadata.py');
+test('an5Client/python/an5_metadata.py exists', () => {
+  const pyPath = path.join(__dirname, '..', '..', 'an5Client', 'python', 'an5_metadata.py');
   assertExists(pyPath);
   const content = fs.readFileSync(pyPath, 'utf8');
   assertIncludes(content, 'MODEL_TO_TABLE');
   assertIncludes(content, 'MODEL_FIELDS');
 });
 
-test('mssqlClient/dotnet files exist', () => {
-  const dotnetDir = path.join(__dirname, '..', '..', 'mssqlClient', 'dotnet');
+test('an5Client/dotnet files exist', () => {
+  const dotnetDir = path.join(__dirname, '..', '..', 'an5Client', 'dotnet');
   assertExists(path.join(dotnetDir, 'User.cs'));
   assertExists(path.join(dotnetDir, 'Order.cs'));
-  assertExists(path.join(dotnetDir, 'MssqlDbContext.cs'));
+  assertExists(path.join(dotnetDir, 'An5DbContext.cs'));
 });
 
 // ─── ORM core file tests ─────────────────────────────────────────────────────
 
 console.log('\nORM Core:');
 
-test('mssqlOrm.ts exists with MssqlORM class', () => {
-  const ormPath = path.join(__dirname, '..', 'mssqlOrm.ts');
+test('an5Orm.ts exists with An5ORM class', () => {
+  const ormPath = path.join(__dirname, '..', 'an5Orm.ts');
   assertExists(ormPath);
   const content = fs.readFileSync(ormPath, 'utf8');
-  assertIncludes(content, 'class MssqlORM');
+  assertIncludes(content, 'class An5ORM');
   assertIncludes(content, 'class TableClient');
   assertIncludes(content, 'parseWhere');
   assertIncludes(content, 'buildOrderBy');

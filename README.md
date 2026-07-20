@@ -1,4 +1,4 @@
-# mssqlOrm
+# an5Orm
 
 SQL Server ORM. Proxy client. CRUD. Vector search. Middleware. Raw queries. Transactions.
 
@@ -11,7 +11,7 @@ SQL Server ORM. Proxy client. CRUD. Vector search. Middleware. Raw queries. Tran
 -   **Middleware.** Hook ORM operations: logging, auth, validation.
 -   **Raw Queries.** `$queryRaw`, `$executeRaw`. Auto `NOLOCK`.
 -   **Transactions.** `$transaction`. Rollback support.
--   **Schema Generator.** Parse `.mssql` files. Generate TypeScript/Python/.NET code.
+-   **Schema Generator.** Parse `.an5` files. Generate TypeScript/Python/.NET code.
 
 ## Quick Start
 
@@ -44,9 +44,9 @@ npm test
 ## Usage
 
 ```typescript
-import { MssqlORM } from './mssqlOrm';
+import { An5ORM } from './an5Orm';
 
-const db = new MssqlORM();
+const db = new An5ORM();
 
 // CRUD Operations
 const users = await db.user.findMany({
@@ -83,9 +83,9 @@ const results = await db.$queryRaw`SELECT * FROM users WHERE id = ${id}`;
 
 ## Schema Definition
 
-Schema files: `.mssql`. Path: `mssqlSchema/`. SQL Server types.
+Schema files: `.an5`. Path: `an5Schema/`. SQL Server types.
 
-```mssql
+```an5
 model User {
   id        NVARCHAR(1000) @id @default(uuid())
   email     NVARCHAR(255)  @unique
@@ -108,7 +108,7 @@ model Order {
 
 ## Supported SQL Server Types
 
-Type mapping: `.mssql` to TypeScript.
+Type mapping: `.an5` to TypeScript.
 
 | Schema Type | TypeScript |
 |-------------|------------|

@@ -1,8 +1,8 @@
 import "dotenv/config";
 import fs from "fs";
 import path from "path";
-import { config } from "@mssql/lib/config";
-import { MssqlORM } from "../mssqlOrm";
+import { config } from "@an5/lib/config";
+import { An5ORM } from "../an5Orm";
 
 let bcrypt: any;
 try {
@@ -14,11 +14,11 @@ try {
 const connectionString = process.env.DATABASE_URL;
 
 // Create ORM client instance. If it fails, fall back to raw mssql seeding.
-let db: MssqlORM | null = null;
+let db: An5ORM | null = null;
 let dbLoadError: any = null;
 try {
   if (connectionString) {
-    db = new MssqlORM();
+    db = new An5ORM();
   }
 } catch (e: any) {
   dbLoadError = e;
@@ -113,7 +113,7 @@ async function main() {
 
   // If db client failed to initialize, run fallback seeder and exit early.
   if (!db && dbLoadError) {
-    await runFallbackMssqlSeed(cfg);
+    await runFallbackAn5Seed(cfg);
     return;
   }
 
@@ -265,8 +265,8 @@ function loadDbConnectionsFromEnv(): { name: string; host: string; database: str
   return [];
 }
 
-async function runFallbackMssqlSeed(config: any) {
-  // Minimal fallback seeder using `mssql` for SQL Server when mssqlOrm cannot
+async function runFallbackAn5Seed(config: any) {
+  // Minimal fallback seeder using `an5` for SQL Server when an5Orm cannot
   // initialize (e.g. missing adapter). This performs basic upserts for
   // providers, admin user and database connections.
   // eslint-disable-next-line @typescript-eslint/no-var-requires

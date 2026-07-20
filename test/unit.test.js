@@ -1,5 +1,5 @@
 /**
- * mssqlOrm Unit Tests
+ * an5Orm Unit Tests
  * Tests for parseWhere, buildOrderBy, and core ORM logic.
  * Run: node test/unit.test.js
  */
@@ -153,7 +153,7 @@ function assertIncludes(str, substr, msg) {
   }
 }
 
-console.log('\n=== mssqlOrm Unit Tests ===\n');
+console.log('\n=== an5Orm Unit Tests ===\n');
 
 // ─── parseWhere tests ────────────────────────────────────────────────────────
 

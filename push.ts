@@ -1,12 +1,12 @@
 import "dotenv/config";
 import fs from "fs";
 import path from "path";
-import { MssqlAdapter } from "mssql-adapters";
+import { An5Adapter } from "an5-adapters";
 
 const rootDir = path.join(__dirname, "../");
 let config: any = {};
 try {
-  const configPath = path.join(rootDir, "mssqlOrm.config.js");
+  const configPath = path.join(rootDir, "an5Orm.config.js");
   if (fs.existsSync(configPath)) {
     config = require(configPath);
   }
@@ -14,19 +14,19 @@ try {
   console.warn("⚠️ Could not load config file in push.ts, using defaults.");
 }
 
-const schemaDir = path.resolve(rootDir, config.schemaDir || "mssqlSchema");
+const schemaDir = path.resolve(rootDir, config.schemaDir || "an5Schema");
 
-let _adapter: MssqlAdapter | null = null;
-async function getDb(): Promise<MssqlAdapter> {
+let _adapter: An5Adapter | null = null;
+async function getDb(): Promise<An5Adapter> {
   if (!_adapter) {
-    _adapter = new MssqlAdapter({ connectionString: process.env.DATABASE_URL! });
+    _adapter = new An5Adapter({ connectionString: process.env.DATABASE_URL! });
     await _adapter.$connect();
   }
   return _adapter;
 }
 
 // Supported SQL Server types (base types without params)
-const MSSQL_TYPES = new Set([
+const AN5_TYPES = new Set([
   "NVARCHAR", "VARCHAR", "CHAR", "NCHAR", "TEXT", "NTEXT", "XML",
   "INT", "SMALLINT", "TINYINT", "BIGINT", "FLOAT", "REAL", "DECIMAL", "NUMERIC",
   "MONEY", "SMALLMONEY", "BIT",
@@ -45,16 +45,16 @@ function parseSqlType(raw: string): string {
 async function push() {
   let schemaText = "";
   if (fs.existsSync(schemaDir)) {
-    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".mssql"));
+    const files = fs.readdirSync(schemaDir).filter(f => f.endsWith(".an5"));
     for (const file of files) {
       schemaText += fs.readFileSync(path.join(schemaDir, file), "utf8") + "\n";
     }
   } else {
-    const schemaPath = path.join(__dirname, "schema.mssql");
+    const schemaPath = path.join(__dirname, "schema.an5");
     if (fs.existsSync(schemaPath)) {
       schemaText = fs.readFileSync(schemaPath, "utf8");
     } else {
-      console.error(`No schema found in ${schemaDir} or schema.mssql`);
+      console.error(`No schema found in ${schemaDir} or schema.an5`);
       process.exit(1);
     }
   }
@@ -121,7 +121,7 @@ async function push() {
       const sqlBase = parseSqlType(cleanType);
 
       // Skip if not a known SQL Server type (might be a relation)
-      if (!MSSQL_TYPES.has(sqlBase)) {
+      if (!AN5_TYPES.has(sqlBase)) {
         continue;
       }
 
